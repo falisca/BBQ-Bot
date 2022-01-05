@@ -1,10 +1,11 @@
 import time
 import re
 import keyboard
+import ctypes
 import win32gui
 
 name = "BBQ Bot"
-version = "0.2"
+version = "0.2.1"
 window = win32gui
 window_name = "Survive the wild "
 is_game_foreground = False
@@ -16,19 +17,21 @@ def combineHands():
     global is_game_foreground
     global is_looping_t
     if is_game_foreground:
-        print ("pressing T")
-        is_looping_t = True
+        # ("pressing T")
         is_looping_space = False
-    
+        is_looping_t = True
+
+
 ## press space to use an item in your hands
 def useItem():
     global is_game_foreground
     global is_looping_space
     if is_game_foreground:
-        print ("pressing T")
-        is_looping_space = True
+        # ("pressing space")
         is_looping_t = False
-    
+        is_looping_space = True
+
+
 ## stop the bot, kill all action 
 def stop():
     global is_looping_space
@@ -39,6 +42,7 @@ def stop():
 
 
 ## program starts here
+ctypes.windll.kernel32.SetConsoleTitleW(name + ", V" + version)
 print ("welcome to " + name + " V " + version)
 
 print('Press Ctrl-C to quit.')
@@ -47,11 +51,12 @@ try:
         keyboard.add_hotkey('f9', combineHands)
         keyboard.add_hotkey('f10', useItem)
         keyboard.add_hotkey('f11', stop)
+        keyboard.add_hotkey('<', stop)
 
         while True:
             time.sleep(0.002) # seconds for a tick
             
-            
+            # handle next versions of the game with regex
             if re.sub("\d{1}.\d{2}.\d{1}", "", window.GetWindowText (window.GetForegroundWindow()) ) == window_name:
                 # ("\n game is now foreground")
                 is_game_foreground = True
